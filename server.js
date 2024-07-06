@@ -2,6 +2,7 @@ import express from "express"
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import  Users  from './schema/db.js'
+import db from './schema/db.js'
 
 dotenv.config()
 

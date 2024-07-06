@@ -1,16 +1,17 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config()
 
-const mongo_url = process.env.MONGO_URL;
+// const mongo_url = process.env.MONGO_URL;
 
-mongoose.connect(mongo_url)
+mongoose.connect(process.env.m)
     .then(() => {
-        console.log("Database connected without issues...");
+        console.log("Database connected ");
     })
     .catch((error) => {
         console.error("Database connection issue:", error.message);
     });
 
-    
 const user = new  mongoose.Schema({
     username: {
         type: String,
