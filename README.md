@@ -31,4 +31,6 @@ Along with MERN I am using additional libraries like:
    
    *if payment is successfully from user1 to user2 but some reason from user1's money is not debited or user2's account is not credited or  else then the whole payment has to be reverted just like UPI which it does within 24hours*
  - Implemented Tailwind CSS for the first time in an project. Makes it simplier not to waste writing long line of CSS altogether
+ -  OR statements in MongoDB using $regrex
+ -  References(like Foreign Key in SQL) to link two tables/schemas
  
