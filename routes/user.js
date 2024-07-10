@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import zod from 'zod'
 import User from '../schema/db.js'
+import authMiddleware from './middleware.js'
 
 
 import jwt from 'jsonwebtoken'
@@ -20,6 +21,12 @@ const signupbody = zod.object({
 const signinBody = zod.object({
     username : zod.string().email(),
     password: zod.string()
+})
+
+const updateSchema = zod.object({
+    password: zod.string().min(7).max(255).optional(),
+    firstName: zod.string().min(3).max(255).optional(),
+    lastName: zod.string().min(3).max(255).optional()
 })
 
 // userRouter.get('/yash',(req,res)=>{
@@ -109,6 +116,52 @@ userRouter.post('/signin',async(req,res)=>{
 
    res.status(411).json({message: "Invalid Credentials"})
     
+})
+
+userRouter.put('/update', authMiddleware ,async(req,res)=>{
+    const {success} = updateSchema.safeParse(req.body)
+
+    if(!success)
+    {
+        return res.status(411).json({messgae : "Error while retrieving information"})
+    }
+
+    else{
+    
+        await User.updateOne({_id : req.userId}, req.body)
+        res.status(200).json({message: " Updated succesfully"})
+    }
+
+})
+
+userRouter.get('/bulk',async(req,res)=>{
+   const filter = req.query.filter || ""
+   
+   const users  = User.find({
+    $or:[
+        {
+            firstName : {
+                $regrex : filter
+            }
+
+        },
+        {
+            lastName : {
+                $regrex : filter 
+            }
+        }
+    ]
+   })
+
+   res.json({
+    user: users.map(user=>({
+        username : user.username,
+        firstName : user.firstName,
+        lastName : user.lastName,
+        _id : user._id
+
+    }))
+   })
 })
 
 

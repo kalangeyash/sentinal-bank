@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { number, Schema, string } from "zod";
 dotenv.config()
 
 // const mongo_url = process.env.MONGO_URL;
@@ -41,6 +42,22 @@ const user = new  mongoose.Schema({
     }
 })
 
-const User = mongoose.model("Users", user)
+const accountSchema = new mongoose.Schema({
+    userId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "User",
+        required : true
+    },
 
-export default User
+    balance: {
+        type: Number,
+        required : true
+
+    }
+    
+})
+
+const User = mongoose.model("Users", user)
+const Account = mongoose.model("Account",accountSchema)
+
+export default User ; Account

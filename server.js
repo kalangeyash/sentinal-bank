@@ -5,6 +5,7 @@ import * as dotenv from "dotenv";
 import  User  from './schema/db.js'
 import db from './schema/db.js'
 import cors from 'cors'
+import secret from "./routes/middleware.js";
 
 dotenv.config()
 const PORT = process.env.PORT
