@@ -60,4 +60,4 @@ const accountSchema = new mongoose.Schema({
 const User = mongoose.model("Users", user)
 const Account = mongoose.model("Account",accountSchema)
 
-export default User ; Account
+export default{ User , Account} 
