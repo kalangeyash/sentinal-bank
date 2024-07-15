@@ -2,9 +2,8 @@ import express from 'express'
 import mongoose from 'mongoose'
 import zod from 'zod'
 import User from '../schema/db.js'
-
 import authMiddleware from './middleware.js'
-import Account from '../routes/user.js'
+
 
 import jwt from 'jsonwebtoken'
 
@@ -74,12 +73,6 @@ userRouter.post('/signup', async(req,res) =>{//success
             })
         }
         const userId = User._id
-// cretaed new account now give it some random balance
-
-        await Account.create({
-            userId,
-            balance : 1 + Math.random() * 10000
-        })
 
         const token = jwt.sign({
             userId
@@ -168,7 +161,7 @@ userRouter.get('/bulk',async(req,res)=>{
         _id : user._id
 
     }))
-   })  
+   })
 })
 
 
