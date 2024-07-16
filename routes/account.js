@@ -6,25 +6,36 @@ import mongoose from "mongoose";
 const accountRouter = express.Router();
 
 accountRouter.get("/balance", authMiddleware, async (req, res) => {
-  const account = await Account.findOne({
-    userId: req.userId,
-  });
+  const user = req.userId
+  console.log("req id in user  "+user)
 
-  res.json({
-    balance: account.balance,
+  const accounts = await Account.findOne({
+    userId: user,
   });
+  console.log("the accounts is " + accounts)
+
+  try{
+    res.status(200).json({
+      balance: accounts.balance
+    });
+  }catch(err)
+  {
+    res.status(400).json({
+      messgae : "error in balances"
+    })
+  }
+    
 });
 
 accountRouter.post("/transfer", authMiddleware, async (req, res) => {
-  const session = new mongoose.startSession();
+  const session =  new mongoose.startSession();
 
-  session.startTranscation();
+   await session.startTransaction();
 
   const account = await Account.findOne({
     userId: req.userId,
   }).session(session);
-
-  if (!account || account.balance < amount) {
+|| account.balance < amount) {
     await session.abortTranscation();
     return res.status(400).json({
       message: "Invalid account / Insufficent funds",

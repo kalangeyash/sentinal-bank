@@ -2,9 +2,9 @@ import express from 'express'
 import mongoose from 'mongoose'
 import zod from 'zod'
 import User from '../schema/db.js'
-
 import authMiddleware from './middleware.js'
-import Account from '../routes/user.js'
+import Account from '../schema/accountSchem.js'
+
 
 import jwt from 'jsonwebtoken'
 
@@ -14,10 +14,10 @@ const jwtsecret = process.env.JWT_SECRET
 const userRouter = express.Router()
 
 const signupbody = zod.object({
-    username : zod.string({message: "Username must be string"}).email({message:"Username must be a valid email"}).trim().min(3,{message:"Minimum 3 Characters"}).max(255,{message:"Maximum 255 Characters"}),                     
-    password : zod.string({required_error: "Password must be string"}).trim().min(7,{message:"Minimum 7 Characters"}).max(255,{message:"Maximum 255 Characters"}),                     
-    firstName : zod.string({required_error: "First Name must be string"}).trim().min(3,{message:"Minimum 3 Characters"}).max(255,{message:"Maximum 255 Characters"}),                     
-    lastName : zod.string({required_error: "Last Name must be string"}).trim().min(3,{message:"Minimum 3 Characters"}).max(255,{message:"Maximum 255 Characters"})                     
+    username: zod.string().email(),
+	firstName: zod.string(),
+	lastName: zod.string(),
+	password: zod.string()                 
 })
 const signinBody = zod.object({
     username : zod.string().email(),
@@ -35,27 +35,23 @@ const updateSchema = zod.object({
 // })
 
 userRouter.post('/signup', async(req,res) =>{//success
-    const {success} = signupbody.safeParse(req.body)
+    const {success} = await signupbody.safeParseAsync(req.body)
+    // console.log({success})
 
-    try {
         if(!success)
         {
             return res.status(411).json({
-                message : "Incorrect Inputs"
-            })
+                message : "Incorrect try Inputs"
+            }) 
         }
         
-    } catch (error) {
-        res.status(411).json({
-            messgage : "Incorrect Inputs" 
-        })
-    }
+    
     //check if user already exists or not 
      
         const username = req.body.username
-        const firstName = req.body.firstName
-        const lastName= req.body.lastName
         const password = req.body.password
+        const firstName = req.body.firstName
+        const lastName = req.body.lastName
 
         const userExist = await User.findOne({username: username})
         if(userExist)
@@ -64,18 +60,16 @@ userRouter.post('/signup', async(req,res) =>{//success
                 messgae: "User already exists of this email"
             })
         }
-        if(!userExist)
-        {
+        
             const user = await User.create({
                 username: username,
                 firstName: firstName,
                 lastName: lastName,
                 password: password
             })
-        }
-        const userId = User._id
-// cretaed new account now give it some random balance
-
+        
+        const userId = user._id
+         console.log(Account)
         await Account.create({
             userId,
             balance : 1 + Math.random() * 10000
@@ -87,7 +81,8 @@ userRouter.post('/signup', async(req,res) =>{//success
 
         res.status(200).json({
             message: "user created successfully",
-            token: token
+            token: token,
+            // "balance": balance
         })
   
 } )
@@ -168,7 +163,7 @@ userRouter.get('/bulk',async(req,res)=>{
         _id : user._id
 
     }))
-   })  
+   })
 })
 
 
