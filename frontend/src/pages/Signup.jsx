@@ -9,10 +9,14 @@ function Signup() {
   return (  
     <div className='bg-slate-200 h-screen flex justify-center'>
         <div className='flex flex-col justify-center'>
-             <div className='rounded-lg bg-white w-80 text-center p-2 h-max px-4'>
-                <Heading label={"Signup"}/>
-                
-                <SubHeading label = {"Enter your information to get started"}/>
+             <div className='rounded-lg bg-white w-80 text-center p-2 h-max px-4 '>
+                <div className='shadow-sm pb-1'>
+                  <Heading label={"Signup"}/>
+                </div>
+                <div className="shadow-sm pt-1">
+                  <SubHeading label = {"Enter your information to get started"}/>
+
+                </div>
                 
 
                 <InputBox placeholder="Ash" label={"First Name"}/>
