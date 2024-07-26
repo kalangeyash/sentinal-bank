@@ -74,6 +74,7 @@ router.post("/signin", async (req, res) => {
         username: req.body.username,
         password: req.body.password
     });
+    // console.log("user found")
 
     if (user) {
         const token = jwt.sign({
@@ -83,6 +84,8 @@ router.post("/signin", async (req, res) => {
         res.json({
             token: token
         })
+
+        // console.log("JWT ok")
         return;
     }
 
