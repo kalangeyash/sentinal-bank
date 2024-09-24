@@ -12,7 +12,7 @@ export const SendMoney = () => {
   const handleTransfer = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/api/v1/account/transfer",
+        "https://sentinal-bank.onrender.com/api/v1/account/transfer",
         { to: id, amount },
         {
           headers: {
